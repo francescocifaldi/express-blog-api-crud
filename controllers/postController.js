@@ -1,11 +1,33 @@
-const posts = require('../posts.js')
+const posts = require('../data/posts.js')
 
 function index(req, res){
-    res.json(posts)
+    let filteredPosts = posts
+	// filter tag
+	if (req.query.tag) {
+		filteredPosts = posts.filter((post) => {
+		    return post.tags.includes(req.query.tag)
+		})
+	}
+    res.json(filteredPosts)
 }
 
 function show(req, res){
-    res.json(posts[req.params.id])
+    const id = parseInt(req.params.id)
+	console.log(`Ecco il post con id: ${id}`)
+
+	const post = posts.find((post) => post.id === id)
+	let result = post
+
+	if (!post) {
+		console.log('Post non trovato')
+
+		res.status(404)
+		result = {
+			error: 'Post not found',
+			message: 'Il post non è stato trovato.',
+		}
+	}
+	res.json(result)
 }
 
 function store(req, res){
@@ -21,7 +43,25 @@ function modify(req, res){
 }
 
 function destroy(req, res){
-    res.send(`Elimino il post con id: ${req.params.id}`)
+    const id = parseInt(req.params.id)
+	console.log(`Elimino il post con id: ${id}`)
+
+	const postIndex = posts.findIndex((post) => post.id === id)
+
+	if (postIndex === -1) {
+		res.status(404)
+
+		return res.json({
+			error: 'Pizza not found',
+			message: 'La pizza non è stata trovata.',
+		})
+	}
+	// console.log(pizzaIndex)
+
+	posts.splice(postIndex, 1)
+
+	res.sendStatus(204)
+    console.log(posts)
 }
 
 module.exports = {index, show, store, update,modify,destroy}
