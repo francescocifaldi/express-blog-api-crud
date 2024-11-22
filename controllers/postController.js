@@ -52,14 +52,20 @@ function destroy(req, res){
     const id = parseInt(req.params.id)
 	console.log(`Elimino il post con id: ${id}`)
 
-	const postIndex = posts.findIndex((post) => post.id === id)
+    let postIndex
+    if(isNaN(id)){
+        postIndex = posts.findIndex((post) => post.slug === req.params.id)
+    }
+	else { 
+        postIndex = posts.findIndex((post) => post.id === id)
+    }
 
 	if (postIndex === -1) {
 		res.status(404)
 
 		return res.json({
-			error: 'Pizza not found',
-			message: 'La pizza non è stata trovata.',
+			error: 'Post not found',
+			message: 'Il post non è stato trovato.',
 		})
 	}
     
