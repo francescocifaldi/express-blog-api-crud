@@ -13,10 +13,16 @@ function index(req, res){
 
 function show(req, res){
     const id = parseInt(req.params.id)
-	console.log(`Ecco il post con id: ${id}`)
+    console.log(id)
+    let post
+    if(isNaN(id)){
+        post = posts.find((post) => post.slug === req.params.id)
+    }
+	else { 
+        post = posts.find((post) => post.id === id)
+    }
 
-	const post = posts.find((post) => post.id === id)
-	let result = post
+    let result=post
 
 	if (!post) {
 		console.log('Post non trovato')
@@ -56,8 +62,7 @@ function destroy(req, res){
 			message: 'La pizza non è stata trovata.',
 		})
 	}
-	// console.log(pizzaIndex)
-
+    
 	posts.splice(postIndex, 1)
 
 	res.sendStatus(204)
