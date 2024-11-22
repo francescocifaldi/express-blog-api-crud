@@ -37,7 +37,15 @@ function show(req, res){
 }
 
 function store(req, res){
-    res.send(`Inserimento di un nuovo post`)
+    const newId = posts.length +1
+    console.log(req.body)
+    const {title, slug, content, image, tag} = req.body
+    
+    let lastIndex = posts.length
+    const newPost = {id: newId, title, slug, content, image, tag}
+    posts.push(newPost)
+    console.log(posts)
+    res.send(newPost)
 }
 
 function update(req, res){
